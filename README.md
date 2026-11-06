@@ -1,23 +1,24 @@
-# [Project Name]
+# Isla DMS
 
-> Template note: this README is the project's own README. Fill in the sections below and keep it short; framework documentation lives in `docs/`.
+> Isla DMS is a white-label platform for managing documents and workflows. Users can upload files, assign configurable metadata, and manage them centrally.
 
 ## Project Overview
 
 ### Business Goal
 
-[Describe the main business goal of the project.]
+Provide a flexible and scalable solution for centralized management of digital documents with configurable dynamic metadata. The system acts as a white-label platform, allowing it to be adapted to different industries and use cases.
 
 ### Main Users
 
-- [User Type]
-- [User Type]
+- **Document Managers**: Users who upload files, assign metadata, and manage the document repository.
 
 ### Main Features
 
-- [Feature]
-- [Feature]
-- [Feature]
+- File upload with validations
+- Configurable metadata system (white-label)
+- Document management and organization
+- User authentication
+- Document search and retrieval
 
 ## Project Context
 

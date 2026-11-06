@@ -2,9 +2,12 @@
 
 ## Architecture Style
 
-This project follows a layered architecture inspired by Clean Architecture and SOLID principles.
+This project follows a **modular and decoupled architecture**, inspired by Clean Architecture and SOLID principles, with emphasis on:
 
-The goal is to keep business logic independent from frameworks, databases, APIs, and external services.
+- **Configurability**: Dynamic metadata without hardcoding
+- **Scalability**: Built to grow without code changes
+- **Maintainability**: Clear separation of concerns
+- **White-label**: Adaptable to different clients and use cases
 
 ---
 
@@ -12,79 +15,132 @@ The goal is to keep business logic independent from frameworks, databases, APIs,
 
 ### Single Responsibility Principle
 
-Each class, module, service, or component should have one clear responsibility.
+Each module, component, or service has a single responsibility:
 
-Examples:
-
-- Controllers handle HTTP input/output.
-- Use cases coordinate business operations.
-- Repositories handle persistence access.
-- Services encapsulate reusable domain or application behavior.
-- Validators validate input or business constraints.
+- Controllers/Routes: HTTP request/response handling
+- Services: business logic
+- Repositories: data access
+- Validators: input validation
+- Config: dynamic configuration loading
 
 ---
 
 ### Open/Closed Principle
 
-The system should be open for extension but closed for unnecessary modification.
+System is open for extension without modification:
 
-Examples:
-
-- New integrations should be added through adapters.
-- New business rules should be added without rewriting controllers.
-- New persistence providers should be isolated behind repository interfaces.
+- New metadata types are added via configuration, not code
+- New validations without rewriting controllers
+- Adaptation to different clients without forking the codebase
 
 ---
 
 ### Liskov Substitution Principle
 
-Implementations should be replaceable without breaking expected behavior.
+Implementations are interchangeable respecting contracts:
 
-Examples:
-
-- Repository implementations should respect the same contract.
-- External service adapters should return consistent results.
-- Test doubles should behave like real dependencies from the use case perspective.
+- Consistent repository implementations
+- Storage adapters (local, cloud, etc.)
 
 ---
 
 ### Interface Segregation Principle
 
-Interfaces should be small and focused.
+Small and focused interfaces:
 
-Examples:
-
-- Avoid large generic service interfaces.
-- Split read and write responsibilities when needed.
-- Avoid forcing modules to depend on methods they do not use.
+- Avoid large generic services
+- Separate read/write responsibilities when needed
 
 ---
 
 ### Dependency Inversion Principle
 
-High-level business logic should not depend directly on low-level infrastructure details.
+Business logic does not depend on infrastructure details:
 
-Examples:
-
-- Use cases depend on abstractions.
-- Infrastructure implements those abstractions.
-- Database, HTTP clients, file storage, and external APIs are hidden behind interfaces.
+- Services depend on abstractions
+- Infrastructure implements those abstractions
+- Database, file storage, external APIs: behind interfaces
 
 ---
 
 ## High-Level Structure
 
+### Frontend (React + Vite)
+
 ```txt
-apps/[app-name]/src/
+apps/web/src/
+├── components/
+│   ├── ui/              ← ShadCN/Tailwind components
+│   ├── features/        ← feature components (Upload, DocumentList, etc.)
+│   └── layout/          ← general layouts (Header, Sidebar, etc.)
+├── pages/               ← pages/routes
+├── hooks/               ← custom hooks (useDocuments, useAuth, etc.)
+├── services/            ← API clients (axios + React Query)
+├── contexts/            ← global contexts (Auth, Config, etc.)
+├── types/               ← TypeScript types and interfaces
+├── utils/               ← general utilities
+├── tokens/              ← custom tokens (colors, spacing, typography)
+└── tests/               ← unit and component tests
+```
+
+### Backend
+
+```txt
+apps/[backend]/src/
 ├── modules/
 │   └── [module-name]/
-│       ├── domain/
-│       ├── application/
-│       ├── infrastructure/
-│       └── presentation/
+│       ├── domain/              ← entities and business logic
+│       ├── application/         ← use cases
+│       ├── infrastructure/      ← adapters, repositories
+│       └── presentation/        ← controllers, routes
+├── config/              ← dynamic configuration loading
 ├── shared/
-│   ├── errors/
-│   ├── utils/
-│   └── types/
+│   ├── errors/          ← custom errors
+│   ├── utils/           ← shared utilities
+│   ├── types/           ← shared types
+│   └── validators/      ← validators
 └── tests/
 ```
+
+---
+
+## Key Architectural Decisions
+
+### 1. Dynamic Metadata Configuration
+
+Metadata is **NOT hardcoded**. It is loaded from configuration file (JSON/YAML) on app startup.
+
+```
+config/
+├── metadata-schema.json   ← defines document metadata structure
+└── validation-rules.json  ← validation rules
+```
+
+This enables:
+- Metadata changes without redeploy
+- Adaptation to different clients (white-label)
+- Schema versioning
+
+### 2. Frontend-Backend Separation
+
+- Frontend: UI, local authentication, UX validation
+- Backend: Business validation, storage, workflow logic
+
+### 3. Storage Scalability
+
+File storage abstracted:
+- Local (development)
+- S3/Blob Storage (production)
+- Other providers without code changes
+
+---
+
+## Module Responsibilities (Backend, to be defined)
+
+| Module | Responsibility |
+|--------|-----------------|
+| Auth | Authentication and JWT tokens |
+| Documents | Document and metadata management |
+| Files | File storage and download |
+| Config | Configuration loading and validation |
+| Health | Healthchecks and observability |
