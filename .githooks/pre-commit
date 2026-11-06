@@ -1,0 +1,5 @@
+#!/bin/sh
+# Logs Copilot credit consumption; never blocks a commit.
+node scripts/log-credits.mjs --quiet >/dev/null 2>&1
+git add docs/CREDITS_LOG.md docs/credits >/dev/null 2>&1
+exit 0

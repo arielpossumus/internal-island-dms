@@ -1,0 +1,19 @@
+# VS Code local settings
+.vscode/settings.json
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Dependencies
+dist/
+build/

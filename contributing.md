@@ -66,6 +66,7 @@ Location:
 ```txt
 .github/agents/dev/   (engineering)
 .github/agents/ux/    (design)
+.github/agents/consultants/    (project consulting)
 ```
 
 Agents represent specialized engineering roles.

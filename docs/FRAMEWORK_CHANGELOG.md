@@ -4,6 +4,15 @@ History of framework changes, not of the projects that use it. Semantic versioni
 
 The current version is in `FRAMEWORK_VERSION` and must match the first entry of this file (validated by `scripts/validate-framework.mjs`). Up to 2.8.0 the history belongs to the original UX framework; from 3.0.0 it is the history of the unified framework (Dev + UX).
 
+## 3.1.0 — 2026-11-06
+
+Origin: need to track Copilot credit consumption per project without manual entry. Evidence: VS Code stores `copilotCredits` per request in the local `chatSessions` files.
+
+- **Consultant agents:** new group `.github/agents/consultants/` with `credits-tracker`, registered in `.vscode/settings.json`, the Framework Paths table, and the validator naming rules.
+- **Credits log:** `scripts/log-credits.mjs` rebuilds sessions from `chatSessions`, stores one data file per user in `docs/credits/`, and renders `docs/CREDITS_LOG.md` (changelog-style, per day and user).
+- **Automation:** `.githooks/pre-commit` runs the script on every commit; enable once with `node scripts/log-credits.mjs --install-hook`.
+- **Prompt:** `/credits` runs `credits-tracker`.
+
 ## 3.0.0 — 2026-11-04
 
 Origin: integration of the UX framework into the engineering agents framework as a single template. Major change: it moves files and renames agents.

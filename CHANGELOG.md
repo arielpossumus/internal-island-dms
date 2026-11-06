@@ -14,7 +14,8 @@ Template usage:
 
 ### Added
 
-- [Describe newly added capabilities]
+- `credits-tracker` agent (`.github/agents/consultants/`) and `/credits` prompt to report Copilot credit consumption.
+- `scripts/log-credits.mjs` records credits per session into `docs/CREDITS_LOG.md`; `--install-hook` logs them on every commit.
 
 ### Changed
 

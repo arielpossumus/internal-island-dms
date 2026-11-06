@@ -49,6 +49,7 @@ for (const f of mdFiles) {
 const namingRules = [
   { dir: '.github/agents/dev', test: (n) => n.endsWith('.agent.md'), hint: '*.agent.md' },
   { dir: '.github/agents/ux', test: (n) => n.endsWith('.agent.md'), hint: '*.agent.md' },
+  { dir: '.github/agents/consultants', test: (n) => n.endsWith('.agent.md'), hint: '*.agent.md' },
   { dir: '.github/skills/dev', test: (n) => n.endsWith('.skill.md'), hint: '*.skill.md' },
   { dir: '.github/skills/ux', test: (n) => n.endsWith('.skill.md'), hint: '*.skill.md' },
   { dir: '.github/rules', test: (n) => n.endsWith('.rules.md'), hint: '*.rules.md' },
@@ -63,7 +64,7 @@ for (const f of allFiles) {
   const name = path.basename(f);
   if (name === '.gitkeep') continue;
   if (/^\.github\/agents\/[^/]+$/.test(r)) {
-    error(f, 'agents must live in .github/agents/dev/ or .github/agents/ux/');
+    error(f, 'agents must live in .github/agents/dev/, .github/agents/ux/, or .github/agents/consultants/');
     continue;
   }
   if (/^\.github\/skills\/[^/]+$/.test(r)) {
