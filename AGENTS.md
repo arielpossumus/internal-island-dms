@@ -6,8 +6,9 @@
 [PROJECT NAME] — [short description]
 
 ## Team
-- UX/UI Lead: [name]
-- Dev: [name]
+- UX/UI Lead: Sara Vera saraverasalguero
+- Dev: Ariel Karlen arielpossumus
+- Dev: Ricardo Povolo
 
 ## Decision ownership
 

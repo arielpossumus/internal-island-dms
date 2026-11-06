@@ -1,10 +1,10 @@
 ---
-description: "When: to check Copilot credit consumption. Refreshes and reads the credits log"
-agent: credits-tracker
+description: "When: to check Copilot credit or token consumption. Refreshes the data and answers only what was asked"
+agent: carlos-de-la-federal
 ---
 
 # Credits report
 
-Refresh the credits log and report the consumption of this project.
+Refresh the data and answer only what the user asked, following the answer rules of the `carlos-de-la-federal` agent.
 
-If the user gave a focus (a user, a day, a session, or a period), answer only that. Otherwise return the full summary in the format defined by the `credits-tracker` agent.
+If the user gave no question, report the total tokens and credits consumed by the project, one line each.

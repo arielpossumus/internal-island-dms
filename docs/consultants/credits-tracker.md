@@ -21,6 +21,7 @@ flowchart LR
   F[git commit] -->|pre-commit hook| B
   G[credits-tracker agent or /credits] -->|runs, then reads| B
   E --> G
+  H[AGENTS.md Team section] -->|first names| G
 ```
 
 1. VS Code Copilot Chat stores each session locally as an event log (`chatSessions/<sessionId>.jsonl`). For every request it records `copilotCredits`, `promptTokens`, `completionTokens`, and a timestamp.
@@ -38,36 +39,45 @@ The session total matches the "Session Cost" shown in the VS Code context panel,
 
 ### What it does
 
-- Refreshes the log before answering.
-- Answers questions about the project total, consumption per user, per day, per session, and the heaviest tasks.
-- Compares periods and flags unusual spikes.
-- States the limits of the data when they affect an answer.
+- Refreshes the data before answering.
+- Answers only the metric asked: tokens or credits, project total, per user, per day, or per session.
+- Replaces GitHub usernames with first names, taken from the "Team" section of `AGENTS.md` (see "Team Names").
+
+### Team Names
+
+The names of the team members are read from `AGENTS.md`, section "Team", never typed in the agent or stored in the data. Each member is one line:
+
+```md
+- Role: First Last githubusername
+```
+
+- The recorded user (the GitHub username, as in `git config user.name`) is matched case-insensitively against the last word of each line.
+- The answer uses the first name of that line (`Ariel`, `Sara`).
+- If no line matches, the agent shows the recorded user as is.
+- To add, rename, or remove a member, edit only the "Team" section of `AGENTS.md`.
 
 ### What it does not do
 
-- Does not estimate or invent figures; it reports what the log shows.
+- Does not add explanations, definitions, routine notes, step narration, or follow-up questions.
+- Does not estimate or invent figures; it reports what the data shows.
 - Does not edit `docs/CREDITS_LOG.md` or `docs/credits/` by hand.
 - Does not read billing data from GitHub; figures can differ from the organization's billing report.
 
 ### How to invoke it
 
-- Prompt: `/credits`, optionally followed by a focus ("only yesterday", "by user", "session fce7c1ad").
-- Chat: select the `credits-tracker` agent, or ask about credit consumption and the orchestrator routes the request (see `.github/copilot-instructions.md`).
+- Prompt: `/credits`, optionally followed by a question ("tokens per user", "credits yesterday").
+- Chat: select the agent, or ask about credit or token consumption and the orchestrator routes the request (see `.github/copilot-instructions.md`).
 
 ### Response format
 
-```md
-## Credits Summary
+A short, friendly sentence in the language of the question, with no headings or lists. Tokens consumed = input (`promptTokens`) + output (`completionTokens`) of every request.
 
-- Period: [dates covered]
-- Project total: [credits]
-- By user: [user: credits]
-- Heaviest sessions: [id, title, credits]
+- "¿Cuántos tokens consumió Ariel?" → "Ariel consumió en este proyecto 986.101 tokens, de los cuales 938.100 fueron de entrada y 48.001 de salida."
+- "¿Cuántos créditos llevamos?" → "Hasta ahora el proyecto lleva 184,38 créditos consumidos."
 
-### Notes
+Numbers use the es-AR format (dot for thousands, comma for decimals), both in answers and in `docs/CREDITS_LOG.md`. The JSON data files keep plain numbers.
 
-- [Limits that affect these figures]
-```
+With more than one user, a project-level answer also gives each person's share. The agent does not narrate its steps or end with offers.
 
 ---
 
@@ -103,7 +113,7 @@ Each subfolder has a `workspace.json` with the opened folder; the script uses on
 
 - **Identity:** the user is `git config user.name` (falls back to the OS user). All sessions found on a machine belong to that user.
 - **Idempotent:** a session is identified by its id. Running the script again updates it instead of duplicating it.
-- **Never lowers a value:** if a stored session has more credits than the one just read (for example the local file was compacted), the stored one is kept.
+- **Never lowers a value:** if a stored session has more credits than the one just read (for example the local file was compacted), the stored one is kept. A record with the same or more credits is refreshed, which adds newer fields such as token totals.
 - **Per-day attribution:** a session that spans several days contributes to each day by the date of each request.
 - **No data:** if no session data is found for the workspace, the log is left unchanged.
 - **Tolerant parsing:** unreadable lines or sessions are skipped, never fatal.
@@ -126,11 +136,12 @@ One file per contributor, so concurrent commits do not conflict on the same file
       "user": "arielpossumus",
       "credits": 76.05,
       "requests": 11,
+      "promptTokens": 0,
       "completionTokens": 0,
       "peakPromptTokens": 0,
       "firstAt": "2026-11-06T00:00:00.000Z",
       "lastAt": "2026-11-06T00:00:00.000Z",
-      "days": { "2026-11-06": { "credits": 76.05, "requests": 11 } }
+      "days": { "2026-11-06": { "credits": 76.05, "requests": 11, "promptTokens": 0, "completionTokens": 0 } }
     }
   }
 }
@@ -138,14 +149,16 @@ One file per contributor, so concurrent commits do not conflict on the same file
 
 ### `docs/CREDITS_LOG.md`
 
-Generated, changelog-style, newest day first: project total, total per user, then one section per day with one block per user and one line per session.
+Generated, changelog-style, newest day first: project total (credits and tokens), total per user, then one section per day with one block per user and one line per session. Token totals add up the input and output of every request; "peak context" is only the largest single request, so it is much smaller than the input total.
 
 ```md
-## [2026-11-06] - 76.05 credits
+**Project total: 76,05 credits, 130.000 tokens (125.000 input, 5.000 output)** across 1 session(s).
 
-### arielpossumus - 76.05 credits
+## [2026-11-06] - 76,05 credits
 
-- `fce7c1ad` Session title: 76.05 credits, 11 request(s), peak context 126.1K tokens
+### arielpossumus - 76,05 credits
+
+- `fce7c1ad` Session title: 76,05 credits, 130.000 tokens (125.000 input, 5.000 output), 11 request(s), peak context 126,1K
 ```
 
 ---

@@ -5,16 +5,19 @@
       "sessionId": "fce7c1ad-bc39-487d-9aca-34d416596a40",
       "title": "Agente para consultar y documentar créditos",
       "user": "arielpossumus",
-      "credits": 129.835467,
-      "requests": 12,
-      "completionTokens": 37007,
-      "peakPromptTokens": 157002,
+      "credits": 420.191703,
+      "requests": 22,
+      "promptTokens": 2758682,
+      "completionTokens": 67245,
+      "peakPromptTokens": 225089,
       "firstAt": "2026-11-06T12:36:40.097Z",
-      "lastAt": "2026-11-06T13:04:45.645Z",
+      "lastAt": "2026-11-06T13:49:11.014Z",
       "days": {
         "2026-11-06": {
-          "credits": 129.835467,
-          "requests": 12
+          "credits": 420.191703,
+          "requests": 22,
+          "promptTokens": 2758682,
+          "completionTokens": 67245
         }
       }
     }
