@@ -1,28 +1,25 @@
 # Project Context
 
-> Template. Replace every `[...]` placeholder with real project information and delete the guidance notes (`>`). Agents rely on this file and must not invent business rules outside it. A filled-in reference lives in `.github/examples/logistics-project-context.example.md`.
-
 ## Project Name
 
-[Project Name]
+Isla DMS
 
 ---
 
 ## Business Domain
 
-[Describe the business domain and what the platform does.]
+Digital document management and workflows platform. A white-label solution that allows organizations across any sector to centralize, categorize, and manage their files with configurable metadata.
 
 ---
 
 ## Business Goal
 
-[Describe the main business goal.]
+Provide a scalable and flexible document management solution that:
 
-The system should:
-
-- [Goal]
-- [Goal]
-- [Goal]
+- Allows centralized file upload and organization
+- Configures metadata dynamically based on client needs (white-label)
+- Facilitates document search and retrieval
+- Ensures authentication and access security
 
 ---
 
@@ -30,18 +27,20 @@ The system should:
 
 | User Type | Description |
 |---|---|
-| [User Type] | [What they do in the system] |
-| [User Type] | [What they do in the system] |
+| Document Manager | Uploads files, assigns configurable metadata, manages the document repository |
 
 ---
 
 ## Main Workflows
 
-### [Workflow Name]
+### Document Management
 
-1. [Step]
-2. [Step]
-3. [Step]
+1. User authenticates in the system
+2. Accesses the documents panel
+3. Uploads a file (with validations)
+4. Assigns configurable metadata/categories to the file
+5. File becomes available in the repository
+6. User can search, view, and manage their documents
 
 ---
 
@@ -49,15 +48,17 @@ The system should:
 
 | Rule ID | Rule |
 |---|---|
-| BR-001 | [Rule] |
-| BR-002 | [Rule] |
+| BR-001 | All authenticated users have the same permissions (no differentiated RBAC at this stage) |
+| BR-002 | Document metadata is configurable via configuration file (white-label architecture) |
+| BR-003 | No differentiated permissions between users in the initial version |
 
 ---
 
 ## Operational Constraints
 
-- [Constraint]
-- [Constraint]
+- Metadata defined dynamically in config file (not hardcoded)
+- System must be adaptable to different clients without code changes
+- File validation according to configuration
 
 ---
 
@@ -65,23 +66,29 @@ The system should:
 
 Expected scale during the first year:
 
-- [Expected volume or concurrency]
+- To be defined with backend architecture
 
 Future scalability considerations:
 
-- [Consideration]
+- Multi-tenant support
+- Integration with external systems
+- Document auditing and versioning
 
 ---
 
 ## Security Considerations
 
-- [Security expectation: authentication, authorization, sensitive data, audit]
+- Mandatory authentication for all users
+- Encryption of sensitive data
+- Secure management of uploaded files
+- Validation of file types and sizes
+- Access control to the repository
 
 ---
 
 ## Reliability Expectations
 
-- [Availability, rollback, monitoring, and retry expectations]
+- To be defined with backend architecture and deployment
 
 ---
 
@@ -89,32 +96,35 @@ Future scalability considerations:
 
 | Risk | Impact |
 |---|---|
-| [Risk] | [Impact] |
+| Misconfigured metadata | Users unable to categorize documents correctly |
+| Insufficient file validations | Security compromised |
 
 ---
 
 ## Current Challenges
 
-- [Challenge]
+- Design flexible metadata system without hardcoding values
+- Secure and configurable file validation
 
 ---
 
 ## Future Expectations
 
-- [Planned evolution]
+- Add approval workflows
+- Document versioning
+- Integration with external services
+- Multi-tenant support
 
 ---
 
 ## UX / Design System Context
 
-> Delete this section if the project has no UI. Design rules, tokens, and paths live in `AGENTS.md`.
-
-- Design source of truth: [Figma file link]
-- Target platforms: [web / mobile / both]
-- Primary user flows to design first: [flows]
+- Design source of truth: HTML prototypes with specs and custom tokens (no Figma)
+- Target platforms: Web
+- Primary user flows to design first: Authentication → File upload → Metadata management → Document search
 
 ---
 
 ## Final Notes
 
-[Project priorities and trade-offs, for example reliability over speed of delivery.]
+Priority: **Flexibility and configurability** over complex initial features. The system must be adaptable to different clients without changes to the codebase.
