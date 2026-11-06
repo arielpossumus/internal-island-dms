@@ -1,8 +1,0 @@
-{
-  "chat.agentFilesLocations": {
-    ".github/agents": true,
-    ".github/agents/dev": true,
-    ".github/agents/ux": true,
-    ".github/agents/consultants": true
-  }
-}
