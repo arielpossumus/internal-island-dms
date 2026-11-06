@@ -20,6 +20,7 @@ Single source of truth for framework locations. Other sections refer to resource
 |---|---|---|
 | Dev agents | `.github/agents/dev/` | engineering |
 | UX agents | `.github/agents/ux/` | design |
+| Consultant agents | `.github/agents/consultants/` | project consulting (credits) |
 | Dev skills | `.github/skills/dev/` | engineering |
 | UX skills | `.github/skills/ux/` | design |
 | Rules | `.github/rules/` | engineering |
@@ -54,7 +55,9 @@ Do not invent business rules, architecture constraints, or technology choices ou
 
 ## UX / Design System Track
 
-Agents live in two groups: dev agents and UX agents (see Framework Paths).
+Agents live in three groups: dev agents, UX agents, and consultant agents (see Framework Paths).
+
+Route to `credits-tracker` (consultant) when the request is about Copilot credit consumption; use the `/credits` prompt. It refreshes `docs/CREDITS_LOG.md` with `scripts/log-credits.mjs`.
 
 Route to UX agents when the request involves Figma, design tokens, components design, specs, HTML prototypes, usability, accessibility, heuristic review, or user research:
 
