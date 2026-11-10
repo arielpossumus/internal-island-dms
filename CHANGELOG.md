@@ -16,6 +16,15 @@ Template usage:
 
 - `credits-tracker` agent (`.github/agents/consultants/`) and `/credits` prompt to report Copilot credit consumption.
 - `scripts/log-credits.mjs` records credits per session into `docs/CREDITS_LOG.md`; `--install-hook` logs them on every commit.
+- Frontend application initialized in `apps/web/` with React 18 + Vite + TypeScript + ShadCN/UI + Tailwind CSS.
+  - Project structure with components, services, hooks, types, and pages
+  - Path alias configuration (`@/*`) for clean imports
+  - Axios HTTP client with interceptors for authentication
+  - React Query integration for server state management
+  - Initial pages and hooks for document management
+  - Tailwind CSS and design system token infrastructure
+  - ESLint configuration for code quality
+  - README with development setup and conventions
 
 ### Changed
 
@@ -36,6 +45,7 @@ Template usage:
 ### Security
 
 - [Describe security hardening or vulnerability fixes]
+
 
 ## [x.y.z] - YYYY-MM-DD
 
