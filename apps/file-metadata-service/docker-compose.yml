@@ -1,0 +1,36 @@
+services:
+  api:
+    build: .
+    container_name: file-metadata-api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@db:5432/file_metadata
+      MAX_FILE_SIZE_BYTES: 52428800
+      EXIFTOOL_TIMEOUT_SECONDS: 30
+      TEMP_DIR: /tmp/file-metadata
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: file-metadata-db
+    environment:
+      POSTGRES_DB: file_metadata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d file_metadata"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
