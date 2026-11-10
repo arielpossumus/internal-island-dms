@@ -1,3 +1,23 @@
+# VS Code local settings
+.vscode/settings.json
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# Dependencies
+dist/
+build/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -10,30 +30,7 @@ venv/
 .coverage
 htmlcov/
 
-# Node
-node_modules/
-dist/
-build/
-.next/
-npm-debug.log*
-
-# Environment and secrets
-.env
-.env.*
-!.env.example
-*.pem
-*.key
-
 # IDEs
 .idea/
 .vscode/
 *.iml
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs and temp
-*.log
-tmp/
-temp/

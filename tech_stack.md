@@ -1,6 +1,20 @@
 # Tech Stack
 
-> Template. Replace every `[...]` placeholder with the real technologies and conventions of the project, and delete rows or sections that do not apply. Agents must not suggest technologies outside this file. A filled-in reference lives in `.github/examples/logistics-tech-stack.example.md`.
+## Frontend
+
+| Technology | Purpose |
+|---|---|
+| React 18+ | UI library |
+| TypeScript | Static typing |
+| Vite | Build tool and dev server |
+| React Router | Routing and navigation |
+| React Query | Server state management and caching |
+| Axios | HTTP client for APIs |
+| ShadCN/UI | Accessible UI components |
+| Tailwind CSS | Styling and CSS utilities |
+| Custom Tokens | Design system tokens (from specs and HTML prototypes) |
+
+---
 
 ## Backend
 
@@ -17,35 +31,13 @@
 
 ---
 
-## Frontend
-
-| Technology | Purpose |
-|---|---|
-| [UI library] | Web UI library |
-| [Language] | Main frontend language |
-| [Build tool] | Frontend build tool |
-| [Routing] | Routing |
-| [Server state] | Server state and API caching |
-| [Client state] | Client-side state management |
-| [Styling] | Styling approach |
-
-Design tokens: `tokens/` (W3C DTCG exported from Figma). Components use `semantic/` and `foundations/` tokens only. See `AGENTS.md`.
-
----
-
-## Mobile
-
-> Delete if the project has no mobile app.
-
-| Technology | Purpose |
-|---|---|
-| [Framework] | Mobile application |
-| [Language] | Mobile app language |
+**To be defined in next phase**
 
 ---
 
 ## Database
 
+**To be defined in next phase**
 | Technology | Purpose |
 |---|---|
 | PostgreSQL 16 (JSONB for variable embedded metadata) | Primary transactional database |
@@ -57,54 +49,31 @@ Design tokens: `tokens/` (W3C DTCG exported from Figma). Components use `semanti
 
 ## Infrastructure
 
-| Technology | Purpose |
-|---|---|
-| [Containerization] | Local and production containerization |
-| [Orchestration / hosting] | Runtime environment |
-| [Cloud services] | Storage, managed database, CDN |
+**To be defined in next phase**
 
 ---
 
 ## CI/CD
 
-| Technology | Purpose |
-|---|---|
-| [CI/CD tool] | Pipelines |
-| [Registry] | Store application images |
-| [Environment protection] | Approval rules |
+**To be defined in next phase**
 
 ---
 
 ## Testing Stack
 
-| Technology | Purpose |
-|---|---|
-| [Unit test tool] | Unit tests |
-| [Integration test tool] | API integration tests |
-| [Frontend test tool] | Component and interaction tests |
-| [E2E tool] | End-to-end tests |
+**To be defined in next phase**
 
 ---
 
 ## Observability Stack
 
-| Technology | Purpose |
-|---|---|
-| [Tracing] | Distributed tracing |
-| [Metrics] | Metrics and dashboards |
-| [Logs] | Centralized logs |
-| [Error tracking] | Error tracking |
+**To be defined in next phase**
 
 ---
 
 ## Security Tooling
 
-| Technology | Purpose |
-|---|---|
-| [Tool] | Secret scanning |
-| [Tool] | Dependency updates |
-| [Tool] | Security testing |
-| [Tool] | Secret management |
+**To be defined in next phase**
 
 ---
 
@@ -127,27 +96,57 @@ Design tokens: `tokens/` (W3C DTCG exported from Figma). Components use `semanti
 
 ### Frontend Conventions
 
-- [Convention]
-- Use design tokens from `tokens/`; never hardcode color, spacing, or typography values.
-- Implement from the handoff spec in `specs/` when one exists.
+- Use **TypeScript** throughout all frontend code
+- Import components from ShadCN/UI + Tailwind for base UI
+- Use **custom tokens** from `tokens/` for colors, spacing, typography (never hardcode values)
+- Implement from specs in `specs/` when available
+- Use **React Query** for server state
+- Keep components without business logic (dumb components)
+- Use **custom hooks** for reusable logic
+- Validate data in frontend (UX) and backend (security)
+- Prefer composition over inheritance in components
 
----
+### File Structure Convention
 
-### Mobile Conventions
+```
+src/
+├── components/         reusable components
+├── pages/             pages/routes
+├── hooks/             custom hooks
+├── services/          API clients and calls
+├── types/             TypeScript types
+├── utils/             utilities
+├── tokens/            design system
+└── tests/             tests
+```
 
-- [Convention]
+### API Integration Convention
 
----
+- Use **Axios** with centralized instance
+- **React Query** for queries (GET) and mutations (POST, PUT, DELETE)
+- Centralize endpoints in `services/api.ts` or similar
+- Consistent error handling
+- Automatic retries in queries according to configuration
 
-### Testing Conventions
+### State Management Convention
 
-- [Convention]
+- **Local state**: useState in component
+- **URL state**: useSearchParams, useParams
+- **Server state**: React Query (queries + mutations)
+- **Global state**: Context API + useReducer if needed (minimize)
 
----
+### Testing Convention
+
+- Unit tests: pure components, utils, hooks
+- Integration tests: critical flows (auth, upload)
+- E2E: complete user flows (TBD)
 
 ### Git Workflow
 
-- [Branching, pull request, review, and commit rules. UX branches: see `AGENTS.md`.]
+- **Branches**: `feat/`, `fix/`, `ux/`, `ds/` according to change type
+- **Commits**: Descriptive and in English
+- **PRs**: Clear description, mandatory review
+- **Main**: Always deployable
 
 ---
 
@@ -155,16 +154,23 @@ Design tokens: `tokens/` (W3C DTCG exported from Figma). Components use `semanti
 
 | Environment | Purpose |
 |---|---|
-| [Environment] | [Purpose] |
+| development | Local, with hot reload |
+| staging | Production mirror (to be defined) |
+| production | End users |
 
 ---
 
 ## Deployment Strategy
 
-- [Deployment rule]
+**To be defined in next phase**
 
 ---
 
 ## Final Notes
 
-[Stack priorities, for example maintainability and operational reliability.]
+**Priorities:**
+1. Flexibility and configurability (white-label)
+2. Static typing (TypeScript)
+3. Developer experience (Vite + hot reload)
+4. Accessible components (ShadCN)
+5. Clean and predictable state (React Query + Context)

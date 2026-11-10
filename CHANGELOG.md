@@ -14,6 +14,8 @@ Template usage:
 
 ### Added
 
+- `credits-tracker` agent (`.github/agents/consultants/`) and `/credits` prompt to report Copilot credit consumption.
+- `scripts/log-credits.mjs` records credits per session into `docs/CREDITS_LOG.md`; `--install-hook` logs them on every commit.
 - Root `tech_stack.md`: Backend, Database, and Backend Conventions sections now reflect the real stack of `file-metadata-service`.
 - `file-metadata-service`: README now documents running with Docker Compose and locally, configuration variables, and troubleshooting.
 

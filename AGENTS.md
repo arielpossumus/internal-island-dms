@@ -3,11 +3,12 @@
 > Rules for the **UX / Design System** domain of the unified framework. They apply to the agents in `.github/agents/ux/`, to the UX flow prompts, and to design artifacts (`tokens/`, `specs/`, `prototypes/`, `research/`, `reviews/`, `decisions/`). Engineering rules live in `.github/copilot-instructions.md` and `.github/rules/`.
 
 ## What this project is
-[PROJECT NAME] — [short description]
+Isla DMS — A white-label digital document management platform where users can upload files, assign configurable metadata, and manage documents centrally.
 
 ## Team
-- UX/UI Lead: [name]
-- Dev: [name]
+- UX/UI Lead: Sara Vera saraverasalguero
+- Dev: Ariel Karlen arielpossumus
+- Dev: Ricardo Povolo
 
 ## Decision ownership
 
@@ -15,21 +16,21 @@ Each domain has an owner who is consulted before moving forward. For agents: whe
 
 | Domain | Owner |
 |---------|-----------|
-| Design system, tokens, and naming | [name] |
-| Priorities and process | [name] |
-| Frontend / implementation | [name] |
-| Content and functional scope | [name] |
+| Design system, tokens, and naming | Sara Vera |
+| Priorities and process | --- |
+| Frontend / implementation | Ariel Karlen |
+| Content and functional scope | --- |
 
 ## Stack
-- Tokens: W3C DTCG exported from Figma Variables
-- Typography: [project fonts]
-- CSS: [CSS framework] — pipeline via Style Dictionary (dev task)
-- Frontend framework: [define with the team]
-- Figma: visual source of truth — variables and styles synced to the tokens folder
+- Tokens: To be defined (custom system from HTML prototypes and specs)
+- Typography: To be defined
+- CSS: Tailwind CSS
+- Frontend framework: React 18 + Vite
+- Design source: HTML prototypes with specs and custom tokens (no Figma)
 
 ## Language
-- Responses and documentation: [English / other]
-- Code and comments: [English / other]
+- Responses and documentation: English
+- Code and comments: English
 
 ## Repo structure
 ```
@@ -70,63 +71,13 @@ Each domain has an owner who is consulted before moving forward. For agents: whe
 
 ## Token architecture
 
-Three layers, one folder per layer:
+**To be defined.** Token system architecture (primitives, foundations, semantic layers) will be designed once HTML prototypes and initial specs are in place.
 
-| Layer | What it contains | Do components use it? |
-|------|---------------|--------------------------|
-| `primitives/` | Raw values (palette) | Never |
-| `foundations/` | Spacing, typography, shadows, radii | Yes |
-| `semantic/` | Purpose-driven tokens; one file per mode, named after the mode in Figma | Yes |
-
-**Mapping to Figma.** Figma has no folders: it has collections (with groups and modes). Each file has its origin:
-
-| File | Figma collection or origin | Source |
-|---------|----------------------------|--------|
-| `primitives/color.tokens.json` | collection `primitives/color` | Variables |
-| `foundations/spacing.tokens.json` | collection `foundations/spacing` | Variables |
-| `foundations/border.tokens.json` | collection `foundations/border` | Variables |
-| `foundations/typography.tokens.json` | collection `foundations/typography`, plus Text Styles | Variables (family, size, weight) and Text Styles (`lineHeight`, `letterSpacing`) |
-| `foundations/shadow.tokens.json` | Effect Styles `shadow/*` | Effect Styles (not variables) |
-| `semantic/<mode>.tokens.json` | collection `semantic`, one mode per file | Variables |
-
-**Rule for new projects: 1:1.** Each Figma Variables collection maps to one repo file, except `semantic`: its modes map to its files. Names with `/` visually organize the collections in Figma without mixing their exports. Shadows have no variable collection: each `shadow/*` Effect Style maps to a token in `foundations/shadow.tokens.json`.
-
-**Existing libraries.** They are not restructured by default. The agent first inventories the collections and proposes the Figma → repo mapping; it only migrates a collection or variables with explicit human approval. If an existing collection contains several groups, `/sync-tokens` can split them when writing to the repo.
-
-**Typography classification.** Font families, sizes, and weights are `foundations/typography` by default. Text Styles are compositions of those variables and explicit metrics; they are also synced to `foundations/typography.tokens.json` by default. Only create typographic tokens or Text Styles in `semantic` when the project has documented that they change by mode or context. That exception is recorded in this file before syncing. A typography Figma collection with a single mode uses the `default` mode. If an existing library has them under `semantic/typography`, the agent flags the discrepancy and proposes the mapping to the repo; it does not move variables or assume a `dark` variation without evidence.
-
-**Modes.** In `semantic/`, the file name is the mode name in Figma, in kebab-case (`default`, `dark`, etc.). A project with a single mode uses `default`. All modes have the same token keys; only the values change.
-
-**Text Styles.** `fontFamily`, `fontSize`, and `fontWeight` are bound to variables; `lineHeight` and `letterSpacing` are explicit values inside the style (a numeric line-height variable may apply pixels). In the JSON they are stored with exactly the same value and unit as Figma (percentage, pixels, or unitless), not as aliases.
-
-A `components/` layer is reserved for later.
-
-## Token flow
-
-**Initial setup — once:**
-Export the variables from Figma (Export modes) → upload the JSONs to the tokens folder, split according to the token architecture → commit.
-
-**When Figma changes:**
-Modify variables, Text Styles, or Effect Styles in Figma → use /sync-tokens with the agent on the affected target →
-the agent shows the diff → you approve → the agent updates the files → you commit.
-
-**New Variables collection:** export it once from Figma and upload it to the destination file before the first sync. After that, `/sync-tokens` maintains its deltas without requiring repeated manual exports.
-
-**Style Dictionary** (CSS pipeline) — configured by the dev when they start.
-It is not part of the UX flow.
-
-## Figma conventions
-
-- Library file key: [key]
-- Component names: [convention, e.g. kebab-case]
-- Library icon names: [convention, if applicable]
-- Variable and style scopes and descriptions: see the `/create-figma-tokens` prompt
+---
 
 ## Active modules
 
-List of optional capabilities this project uses (SEO, multi-language content, CMS, gated handoff, icon catalog). If there are none, leave "none".
-
-- [module or "none"]
+None yet. To be defined as the project evolves.
 
 ## Project visual principles
 
@@ -140,27 +91,20 @@ Each token has a `$description` documenting when to use it and when not to.
 **Read the $description before using any token** — the usage restrictions are there.
 
 ### Page composition
-[Describe how pages are structured: container width, section rhythm,
-background alternation, grid system. This is what defines the visual personality
-beyond colors.]
 
-Example to fill in:
-- Sections alternate between [background A] and [background B] to create visual rhythm
-- Content lives inside a [X px] container — never uncontrolled full-width
-- Typography follows a hierarchy: [brand font] for headings, [functional font] for body
+**To be defined in initial prototypes.** Layout structure (container widths, section rhythm, grid system, background patterns) will be established once design direction is set.
 
 ### Brand visual voice
-[Describe the visual personality in terms the agent can apply.
-Not "use blue" but "the system is technical but approachable — precision without coldness".]
+
+**To be defined.** Visual personality and design principles will be established in the design direction phase. Focus: professional, clean, accessible, suitable for a white-label document management platform.
 
 ### Anti-patterns — what this system does NOT do
-[Document explicit decisions about what to avoid. This is as important as the right patterns.]
 
-Examples of how to fill it in:
-- ❌ Do not use [color X] in [context Y] — use [alternative]
-- ❌ Do not use pure black (#000000) — use the system's near-black
-- ❌ Do not hardcode values that should be tokens
-- ❌ Do not create new components without checking whether a similar one exists
+- ❌ Do not hardcode color, spacing, or typography values — use tokens from `tokens/`
+- ❌ Do not create new components without checking if a similar one exists
+- ❌ Do not implement beyond the handoff spec in `specs/` without design approval
+- ❌ Do not skip accessibility checks — ARIA roles and semantic HTML are always required
+- ❌ Do not use complex animations that distract from document management workflows
 
 ## Decision hierarchy for the agent
 
