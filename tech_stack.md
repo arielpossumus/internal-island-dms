@@ -6,10 +6,14 @@
 
 | Technology | Purpose |
 |---|---|
-| [Runtime] | Backend runtime |
-| [Language] | Main backend language |
-| [Framework] | Backend framework |
-| [Auth mechanism] | Authentication |
+| Python 3.12 (`python:3.12-slim` image) | Backend runtime and main backend language |
+| FastAPI 0.115 | REST API framework (synchronous endpoints, OpenAPI/Swagger docs) |
+| Uvicorn 0.34 | ASGI server |
+| Pydantic 2.11 | Domain models and response validation |
+| python-multipart | Multipart file upload handling |
+| ExifTool | Embedded metadata extraction (invoked as a subprocess) |
+| libmagic (`python-magic`) | MIME type detection |
+| Not defined yet | Authentication (no auth mechanism implemented; planned) |
 
 ---
 
@@ -44,9 +48,10 @@ Design tokens: `tokens/` (W3C DTCG exported from Figma). Components use `semanti
 
 | Technology | Purpose |
 |---|---|
-| [Database] | Primary transactional database |
-| [ORM / migration tool] | Data access and migrations |
-| [Cache] | Cache and short-lived data |
+| PostgreSQL 16 (JSONB for variable embedded metadata) | Primary transactional database |
+| SQLAlchemy 2.0 + psycopg 3 | Data access (ORM and driver) |
+| `Base.metadata.create_all` at startup (Alembic planned) | Schema management; no migration tool yet |
+| Not defined yet | Cache (none in use) |
 
 ---
 
@@ -107,7 +112,16 @@ Design tokens: `tokens/` (W3C DTCG exported from Figma). Components use `semanti
 
 ### Backend Conventions
 
-- [Convention]
+- Layered architecture per app: `api` (HTTP/routers) → `application` (use cases) → `domain` (models, contracts, errors) → `infrastructure` (database, external tools).
+- Dependencies point inward: `domain` does not import from `application`, `api`, or `infrastructure`.
+- External integrations sit behind a domain contract (Strategy), for example `MetadataExtractor` with `ExifToolExtractor`.
+- Persistence goes through repository classes; SQLAlchemy entities stay in `infrastructure` and never reach the API.
+- Wire dependencies with FastAPI `Depends` so they can be overridden in tests.
+- Use domain exceptions (for example `FileTooLargeError`) for expected failures; map them to HTTP status codes in the `api` layer only.
+- Never return internal details (paths, SQL, tool output) in error responses; log them with `logging` instead.
+- Sanitize external input before persisting it (file names, extensions, NUL characters).
+- Configuration comes from environment variables read in `app/config.py`.
+- Public endpoints are versioned under `/api/v1` and documented with summary, description, and error responses.
 
 ---
 

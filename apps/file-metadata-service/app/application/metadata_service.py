@@ -8,8 +8,10 @@ import magic
 from fastapi import UploadFile
 
 from app.config import MAX_FILE_SIZE_BYTES, TEMP_DIR
+from app.domain.errors import FileTooLargeError
 from app.domain.extractor import MetadataExtractor
 from app.domain.models import MetadataResponse, SystemMetadata
+from app.domain.sanitizers import sanitize_file_name, strip_nul
 from app.infrastructure.exiftool_extractor import ExifToolExtractor
 from app.infrastructure.metadata_repository import MetadataRepository
 
@@ -24,8 +26,7 @@ class FileMetadataService:
         self.extractor = extractor or ExifToolExtractor()
 
     def process(self, upload: UploadFile) -> MetadataResponse:
-        original_name = Path(upload.filename or "unnamed").name
-        extension = Path(original_name).suffix.lower() or None
+        original_name, extension = sanitize_file_name(upload.filename or "unnamed")
         digest = hashlib.sha256()
         size = 0
         embedded_metadata = {}
@@ -46,7 +47,7 @@ class FileMetadataService:
                 while chunk := upload.file.read(1024 * 1024):
                     size += len(chunk)
                     if size > MAX_FILE_SIZE_BYTES:
-                        raise ValueError(
+                        raise FileTooLargeError(
                             f"File exceeds the maximum size of "
                             f"{MAX_FILE_SIZE_BYTES} bytes."
                         )
@@ -56,7 +57,7 @@ class FileMetadataService:
             mime_type = magic.from_file(str(temp_path), mime=True)
 
             try:
-                embedded_metadata = self.extractor.extract(temp_path)
+                embedded_metadata = strip_nul(self.extractor.extract(temp_path))
                 extraction_status = "COMPLETED"
             except Exception:
                 # Keep system metadata even when embedded extraction fails.

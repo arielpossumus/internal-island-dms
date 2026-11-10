@@ -17,14 +17,99 @@ temporary file.
 - Docker Engine and Docker Compose plugin.
 - Alternatively, Python 3.12, PostgreSQL, ExifTool, and libmagic.
 
-## Run with Docker Compose
+## Run with Docker Compose (recommended)
+
+Run all commands from `apps/file-metadata-service`.
 
 ```bash
+# Build and start the API and PostgreSQL (foreground)
 docker compose up --build
+
+# Or in the background
+docker compose up --build -d
 ```
 
-API documentation: <http://localhost:8000/swagger/index.html>  
-Health check: <http://localhost:8000/health>
+| Service | Container | URL / Port |
+| --- | --- | --- |
+| API | `file-metadata-api` | <http://localhost:8000> |
+| PostgreSQL | `file-metadata-db` | `localhost:5433` (user/password `postgres`, db `file_metadata`) |
+
+- API documentation: <http://localhost:8000/swagger/index.html>
+- Health check: <http://localhost:8000/health> (returns `{"status": "ok"}`)
+
+The API waits for the database healthcheck, and the schema is created
+automatically at startup.
+
+Useful commands:
+
+```bash
+docker compose ps                  # status of the containers
+docker compose logs -f api         # follow API logs
+docker compose down                # stop and remove containers (keeps data)
+docker compose down -v             # also delete the database volume
+```
+
+### Configuration
+
+Environment variables (defaults in `app/config.py`, overridden in `docker-compose.yml`):
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `DATABASE_URL` | local PostgreSQL on `localhost:5432` | SQLAlchemy URL (`postgresql+psycopg://...`) |
+| `MAX_FILE_SIZE_BYTES` | `52428800` (50 MB) | Maximum accepted upload size |
+| `EXIFTOOL_TIMEOUT_SECONDS` | `30` | Timeout for each ExifTool run |
+| `TEMP_DIR` | `/tmp/file-metadata` | Temporary folder for uploads (deleted after processing) |
+
+## Run locally without Docker
+
+Requires Python 3.12, a running PostgreSQL, [ExifTool](https://exiftool.org/)
+available in `PATH`, and libmagic (on Windows it is installed by
+`python-magic-bin`; on Debian/Ubuntu: `apt install libmagic1 libimage-exiftool-perl`).
+
+1. Start only the database (published on port 5433):
+
+   ```bash
+   docker compose up -d db
+   ```
+
+2. Create the virtual environment and install dependencies:
+
+   ```bash
+   python -m venv .venv
+   # Linux/macOS
+   source .venv/bin/activate
+   # Windows PowerShell
+   .venv\Scripts\Activate.ps1
+
+   pip install -r requirements.txt
+   ```
+
+3. Set the environment variables and start the server:
+
+   ```bash
+   # Linux/macOS
+   export DATABASE_URL="postgresql+psycopg://postgres:postgres@localhost:5433/file_metadata"
+   export TEMP_DIR="/tmp/file-metadata"
+   uvicorn app.main:app --reload --port 8000
+   ```
+
+   ```powershell
+   # Windows PowerShell
+   $env:DATABASE_URL = "postgresql+psycopg://postgres:postgres@localhost:5433/file_metadata"
+   $env:TEMP_DIR = "$env:TEMP\file-metadata"
+   uvicorn app.main:app --reload --port 8000
+   ```
+
+4. Open <http://localhost:8000/swagger/index.html>.
+
+## Troubleshooting
+
+- **Port 8000 or 5433 already in use:** stop the other process or change the
+  published ports in `docker-compose.yml`.
+- **`exiftool` not found when running locally:** install ExifTool and make sure
+  it is in `PATH`; uploads will otherwise finish with `PARTIAL` status.
+- **Database connection errors locally:** check that the `db` container is
+  healthy (`docker compose ps`) and that `DATABASE_URL` uses port `5433`.
 
 ## Upload a file
 

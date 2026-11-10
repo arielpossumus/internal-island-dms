@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 from uuid import UUID
 
@@ -13,8 +14,11 @@ from fastapi import (
 )
 
 from app.application.metadata_service import FileMetadataService
+from app.domain.errors import FileTooLargeError
 from app.domain.models import FileSummary, MetadataResponse
 from app.infrastructure.metadata_repository import MetadataRepository
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/v1/files", tags=["Files"])
 
@@ -55,9 +59,10 @@ def upload_and_extract(
 ):
     try:
         return service.process(file)
-    except ValueError as exc:
+    except FileTooLargeError as exc:
         raise HTTPException(status_code=413, detail=str(exc)) from exc
     except Exception as exc:
+        logger.exception("Failed to process uploaded file")
         # Avoid returning internal paths, SQL details, or extractor output.
         raise HTTPException(
             status_code=500,

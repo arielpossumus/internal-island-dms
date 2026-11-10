@@ -5,6 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.api import files
+from app.domain.errors import FileTooLargeError
 from app.domain.models import FileSummary, MetadataResponse, SystemMetadata
 from app.main import app
 
@@ -103,3 +104,31 @@ def test_find_by_hash(client):
 
 def test_find_by_hash_rejects_invalid_hash(client):
     assert client.get("/api/v1/files/hash/not-a-hash").status_code == 422
+
+
+class RaisingService:
+    def __init__(self, error):
+        self.error = error
+
+    def process(self, _file):
+        raise self.error
+
+
+def _upload(error):
+    app.dependency_overrides[files.get_service] = lambda: RaisingService(error)
+    try:
+        return TestClient(app).post(
+            "/api/v1/files/metadata", files={"file": ("a.txt", b"x")}
+        )
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_upload_too_large_returns_413():
+    assert _upload(FileTooLargeError("too big")).status_code == 413
+
+
+def test_upload_unexpected_value_error_returns_500():
+    response = _upload(ValueError("internal detail"))
+    assert response.status_code == 500
+    assert "internal detail" not in response.text

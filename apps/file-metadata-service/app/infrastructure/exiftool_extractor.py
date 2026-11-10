@@ -27,4 +27,10 @@ class ExifToolExtractor(MetadataExtractor):
             check=True,
         )
         documents = json.loads(result.stdout or "[]")
-        return documents[0] if documents else {}
+        if not documents:
+            return {}
+        return {
+            key: value
+            for key, value in documents[0].items()
+            if key != "SourceFile" and not key.startswith("System:")
+        }

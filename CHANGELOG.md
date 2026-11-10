@@ -14,15 +14,17 @@ Template usage:
 
 ### Added
 
-- [Describe newly added capabilities]
+- Root `tech_stack.md`: Backend, Database, and Backend Conventions sections now reflect the real stack of `file-metadata-service`.
+- `file-metadata-service`: README now documents running with Docker Compose and locally, configuration variables, and troubleshooting.
 
 ### Changed
 
-- [Describe behavior or contract changes]
+- `file-metadata-service`: embedded metadata no longer exposes `SourceFile` or `System:*` fields (internal temporary file paths).
 
 ### Fixed
 
-- [Describe bug fixes with user impact]
+- `file-metadata-service`: only oversized uploads return 413; other internal errors return 500 and are logged.
+- `file-metadata-service`: long file names/extensions and NUL characters in metadata no longer cause storage failures.
 
 ### Removed
 

@@ -7,6 +7,7 @@ from fastapi import UploadFile
 
 from app.application import metadata_service
 from app.application.metadata_service import FileMetadataService
+from app.domain.errors import FileTooLargeError
 from app.domain.extractor import MetadataExtractor
 
 
@@ -69,7 +70,30 @@ def test_process_rejects_oversized_file_and_removes_temp(isolated_env, monkeypat
     monkeypatch.setattr(metadata_service, "MAX_FILE_SIZE_BYTES", 3)
     service = FileMetadataService(FakeRepository(), FakeExtractor())
 
-    with pytest.raises(ValueError):
+    with pytest.raises(FileTooLargeError):
         service.process(make_upload(b"hello"))
 
     assert list(isolated_env.iterdir()) == []
+
+
+def test_process_sanitizes_long_name_and_nul_characters(isolated_env):
+    class NulExtractor(MetadataExtractor):
+        def extract(self, file_path: Path):
+            return {"File:Title": "a\x00b", "Nested": ["x\x00"]}
+
+    service = FileMetadataService(FakeRepository(), NulExtractor())
+
+    result = service.process(make_upload(b"hi", "a" * 300 + ".pdf"))
+
+    assert len(result.system_metadata.file_name) == 255
+    assert result.system_metadata.file_name.endswith(".pdf")
+    assert result.embedded_metadata == {"File:Title": "ab", "Nested": ["x"]}
+
+
+def test_process_drops_oversized_extension(isolated_env):
+    service = FileMetadataService(FakeRepository(), FakeExtractor())
+
+    result = service.process(make_upload(b"hi", "file." + "x" * 40))
+
+    assert result.system_metadata.extension is None
+    assert result.extraction_status == "COMPLETED"
