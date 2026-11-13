@@ -1,0 +1,25 @@
+{
+  "user": "saraverasalguero",
+  "sessions": {
+    "8bed67ea-9074-4d8d-9ae2-e1011949f25d": {
+      "sessionId": "8bed67ea-9074-4d8d-9ae2-e1011949f25d",
+      "title": "Change project name to test de prueba",
+      "user": "saraverasalguero",
+      "credits": 5.321277,
+      "requests": 1,
+      "promptTokens": 26507,
+      "completionTokens": 478,
+      "peakPromptTokens": 26507,
+      "firstAt": "2026-11-06T14:05:41.742Z",
+      "lastAt": "2026-11-06T14:05:41.742Z",
+      "days": {
+        "2026-11-06": {
+          "credits": 5.321277,
+          "requests": 1,
+          "promptTokens": 26507,
+          "completionTokens": 478
+        }
+      }
+    }
+  }
+}
